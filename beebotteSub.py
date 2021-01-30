@@ -1,4 +1,6 @@
 import paho.mqtt.client as mqtt
+import json
+# -*- coding: utf-8 -*-
 
 host = 'mqtt.beebotte.com'
 username = "token_EPQeCSWdNwi950h1"
@@ -16,6 +18,10 @@ def on_message(client, userdata, msg):
     
     #topic QOS payloadを取得
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    device = json.loads(msg.payload.decode())['data'][0]['DEVICE']
+    action = json.loads(msg.payload.decode())['data'][0]['ACTION']
+    print(f'{device} --- {action}')
+
 
 if __name__ == '__main__':
 
