@@ -1,4 +1,4 @@
-import paho.mqtt.client as mqtt
+  import paho.mqtt.client as mqtt
 import json
 import requests
 import RPi.GPIO as GPIO
@@ -22,6 +22,9 @@ def on_message(client, userdata, msg):
     
     #topic QOS payloadを取得
     print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    if msg.payload.decode() == '[]':
+        return
+    
     lineData = json.loads(msg.payload.decode())
     token  = lineData['data'][0]['TOKEN']
     message = lineData['data'][0]['MESG']
@@ -36,12 +39,12 @@ def on_message(client, userdata, msg):
     if message == 'LED ON':
         stickerId ='138'
         packageId = '1'
-        GPIO.output(ledPort, 1)
+        #GPIO.output(ledPort, 1)
 
     if message == 'LED OFF':
         stickerId ='125'
         packageId = '1'
-        GPIO.output(ledPort, 0)
+        #GPIO.output(ledPort, 0)
     
     
     Url = 'https://api.line.me/v2/bot/message/reply'
@@ -70,8 +73,9 @@ def on_message(client, userdata, msg):
     json_data = json.dumps(obj).encode("utf-8")
     response = requests.post(Url,headers=headers, data = json_data)
     print(response)    
-
-
+ 
+    
+    
 if __name__ == '__main__':
     #setup
     
